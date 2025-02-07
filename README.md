@@ -31,42 +31,57 @@ This repository is having the follow key features:
     - **Operational Code (Ops)**: There are few operational code that can is used in the agents:
         - Observability Code: The [observability code](./src/logging) contains the code for logging and monitoring the agents. In this sample `OpenTelemetry` is used for logging and monitoring.
         - MySql Interaction Code: The [MySql interaction code](./src/mysql/execution_env.py) contains the code for interacting with MySql database.
+    - **Deployment Code**: The[deployment code contains the code for deploying the agents in local or cloud environment. In this sample the code is provided for deploying the agents in Azure Web App Service. The deployment code will be:
+        - [Source Module](./src/): core implementation of the agents and group chat.
+        - [REST API Based App](./app_rest_api.py): REST API based app for calling the agents and getting the response (in this example it's `FastAPI`).
+        - [Dockefile](./Dockerfile): Dockerfile for building the image of the entire application.
+        - [Requirements](./requirements.txt) file for the dependencies.
 - **Experimentation**: The [experimentation](./experimentation/) setup by using `console` or `ui` or in `batch` mode.
 - **Evaluation**: The [evaluation](./evaluation/) setup by using `LLM as Judge` and `Human Evaluation`.
 - **Engineering Fundamentals**: The [engineering fundamentals](#engineering-fundamentals) for the development and maintenance of the LLM Agent based solution.
 - **CI CE and CD**: The [CI CE and CD](./.github/workflows/) setup for the continuous integration, continuous evaluation and continuous deployment of the LLM Agent based solution.
 
-## Pre-requisites
+## Getting Started
 
-- Visual Studio Code with Dev Containers extension.
-- Docker Desktop.
-- Azure AI Foundry Service.
-- Azure OpenAI Models.
-- Azure Web App Service (needed only for CD).
-- Azure Application Insights (needed only for CD).
+### Pre-requisites
 
-## Experimentation
+- [Visual Studio Code](https://code.visualstudio.com/) with [Dev Containers](https://code.visualstudio.com/docs/remote/containers) extension.
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+- [Azure AI Foundry Service](https://learn.microsoft.com/en-us/azure/ai-studio/what-is-ai-studio).
+- [Azure OpenAI Chat Model](https://learn.microsoft.com/en-us/azure/ai-studio/quickstarts/get-started-playground#deploy-a-chat-model).
+- [Azure Web App Service](https://learn.microsoft.com/en-us/azure/app-service/overview) (needed only for CD).
+- [Azure Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) (needed only for CD).
 
-[Experimentation](experimentation/README.md) is the process of testing a hypothesis or a proposed LLM Agents based solution to a problem.
+### Experimentation
 
-## Evaluation
+[Experimentation](experimentation/README.md) is the process of designing the agents and testing a hypothesis or a proposed LLM Agents based solution to a problem.
+
+### Evaluation
 
 [Evaluation](evaluation/README.md) is the process of evaluating the performance of the LLM Agents based solution.
 
-## Engineering Fundamentals
+### Engineering Fundamentals
 
-### Dev Containers
+#### CI CE and CD
+
+The repository is setup with [CI CE and CD](.github/workflows/) for the continuous integration, continuous evaluation and continuous deployment of the LLM Agent based solution.
+
+- **CI**: The [CI](.github/workflows/ci.yml) workflow is triggered on every push or pull request to the repository. The CI workflow will run the unit tests and linting checks.
+- **CE**: The [CE](.github/workflows/ce.yml) workflow is triggered manually. The CE workflow will run the batch experimentation and batch evaluation (LLM as Judge).
+- **CD**: The [CD](.github/workflows/cd.yml) workflow is triggered manually. The CD workflow will deploy the LLM Agent based solution to the Azure Web App Service.
+
+#### Dev Containers
 
 The repository is setup with [Dev Containers](https://code.visualstudio.com/docs/remote/containers) for development and testing.
 
-### Local Linting
+#### Local Linting
 
 ```bash
 conda activate base
 pylint src
 ```
 
-### Local Unit Testing
+#### Local Unit Testing
 
 ```bash
 conda activate base
@@ -81,7 +96,7 @@ python -m coverage run --source src -m unittest discover -s tests
 python -m coverage report -m
 ```
 
-### Local Functional Testing (Docker)
+#### Local Functional Testing (Docker)
 
 ```bash
 cp env_docker .env_docker # only once and update the values
