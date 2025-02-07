@@ -55,6 +55,10 @@ This repository is having the follow key features:
 
 ## Engineering Fundamentals
 
+### Dev Containers
+
+The repository is setup with [Dev Containers](https://code.visualstudio.com/docs/remote/containers) for development and testing.
+
 ### Local Linting
 
 ```bash
