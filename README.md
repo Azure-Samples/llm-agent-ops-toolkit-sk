@@ -2,7 +2,9 @@
 
 `LLMAgentOps` Toolkit is repository that contains basic structure of LLM Agent based application built on top of the Semantic Kernel. The toolkit is designed to be a starting point for data scientists and developers for experimentation to evaluation and finally deploy to production their own LLM Agent based applications.
 
-The sample `MySql Copilot` has been implemented using the concept of `StateFlow` (a Finite State Machine FSM based LLM workflow) using [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/) agents - [StateFlow: Enhancing LLM Task-Solving through State-Driven Workflows](https://arxiv.org/abs/2403.11322).
+The sample `MySql Copilot` has been implemented using the concept of `StateFlow` (a Finite State Machine FSM based LLM workflow) using [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/) agents
+
+For more details on `StateFlow` refer the research paper - [StateFlow: Enhancing LLM Task-Solving through State-Driven Workflows](https://arxiv.org/abs/2403.11322).
 
 This toolkit can be used by replacing the `MySql Copilot` with any other LLM Agent based solution or it can be enhanced for a specific use case.
 
@@ -27,7 +29,7 @@ This repository is having the follow key features:
     - **Code Execute Agent**: The [code execute agent](./src/agents/execute.py) is an agent that can join the group of agents but it will execute the code (in this sample it is SQL queries) and return the result, instead of using LLM for generating response like other agents.
     - **Group Chat Selection Logic**: The [group chat selection logic](./src/groupchat/state_flow_selection_strategy.py) is used to select the appropriate next agent based on the current state of the conversation. In this sample the concept of `StateFlow` is used for the selection of the next agent.
     - **Group Chat Termination Logic**: The [group chat termination logic](./src/groupchat/state_flow_termination_strategy.py) is used to terminate the conversation based on the current state of the conversation or maximum number of turns. In this sample the concept of `StateFlow` is used for the termination of the conversation.
-    - **Group Chat**: The [group chat](./src/groupchat/state_flow_chat) contains the group chat client that can serve the conversation between the user and the agents.
+    - **Group Chat**: The [group chat](./src/groupchat/state_flow_chat.py) contains the group chat client that can serve the conversation between the user and the agents.
     - **Operational Code (Ops)**: There are few operational code that can is used in the agents:
         - Observability Code: The [observability code](./src/logging) contains the code for logging and monitoring the agents. In this sample `OpenTelemetry` is used for logging and monitoring.
         - MySql Interaction Code: The [MySql interaction code](./src/mysql/execution_env.py) contains the code for interacting with MySql database.
