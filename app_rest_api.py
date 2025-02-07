@@ -100,10 +100,11 @@ async def chat(query: str) -> dict:
         logger.info(f"Final response: {final_response}")
         return final_response
     except Exception as e:
-        logger.error(f"Error in chat: {str(e)}")
+        logger.error(f"Error in chat: {str(e)}", e)
+        logger.exception(e)
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={"message": str(e)},
+            content={"message": "Internal Server Error, check the logs for more details"},
         )
 
 

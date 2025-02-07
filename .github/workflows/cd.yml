@@ -33,12 +33,12 @@ jobs:
           pip install -r requirements.txt
 
       - name: Azure login using service principal
-        uses: azure/login@v1
+        uses: azure/login@a65d910e8af852a8061c627c456678983e180302 #v2.2.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Azure docker login
-        uses: azure/docker-login@v1
+        uses: azure/docker-login@15c4aadf093404726ab2ff205b2cdd33fa6d054c #v2
         with:
           login-server: ${{ secrets.REGISTRY_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
@@ -52,7 +52,7 @@ jobs:
           docker push ${{ secrets.REGISTRY_SERVER }}/${{ env.AZURE_WEBAPP_NAME }}:latest
 
       - name: Azure WebApp deploy
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@de617f46172a906d0617bb0e50d81e9e3aec24c8 #v3.0.1
         with:
             app-name: ${{ env.AZURE_WEBAPP_NAME }}
             images: ${{ secrets.REGISTRY_SERVER }}/${{ env.AZURE_WEBAPP_NAME }}:${{ github.sha }}
