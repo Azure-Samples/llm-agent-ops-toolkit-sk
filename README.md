@@ -1,4 +1,4 @@
-# LLMAgentOps Toolkit
+# LLMAgentOps Toolkit (Semantic Kernel)
 
 `LLMAgentOps` Toolkit is repository that contains basic structure of LLM Agent based application built on top of the Semantic Kernel. The toolkit is designed to be a starting point for data scientists and developers for experimentation to evaluation and finally deploy to production their own LLM Agent based applications.
 
