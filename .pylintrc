@@ -1,0 +1,11 @@
+[MASTER]
+init-hook='import sys; sys.path.append("."); sys.path.append("/opt/conda/lib/python3.12/site-packages");'
+[MESSAGES CONTROL]
+disable=no-member,too-few-public-methods
+allowed-redefined-builtins=id
+[FORMAT]
+min-similarity-lines=8
+max-line-length=200
+max-args=10
+max-positional-arguments=10
+max-returns=12

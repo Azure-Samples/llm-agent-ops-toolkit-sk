@@ -1,0 +1,8 @@
+azure-ai-projects==1.0.0b5
+azure-ai-inference[prompts]==1.0.0b8
+azure-ai-evaluation==1.2.0
+azure-ai-ml==1.24.0
+azure-identity==1.19.0
+pandas==2.2.3
+python-dotenv==1.0.1
+chainlit==2.0.603

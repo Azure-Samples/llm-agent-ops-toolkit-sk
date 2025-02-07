@@ -1,0 +1,2 @@
+AIPROJECT_CONNECTION_STRING=<Azure AI Foundry Project Connection String>
+EVALUATION_MODEL=<Your Evaluation Model>

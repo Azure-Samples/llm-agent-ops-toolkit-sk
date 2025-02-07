@@ -1,0 +1,23 @@
+{
+	"name": "Semantic Kernel",
+	"image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
+	"runArgs": ["--network=host"],
+	"features": {
+		"ghcr.io/devcontainers/features/azure-cli:1": {},
+		"ghcr.io/devcontainers/features/conda:1": {},
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+		"ghcr.io/devcontainers/features/git:1": {},
+		"powershell": "latest"
+	},
+	"postCreateCommand": "bash -i .devcontainer/create_conda_env.sh",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"streetsidesoftware.code-spell-checker",
+				"qwtel.sqlite-viewer",
+				"ms-toolsai.jupyter",
+				"github.vscode-github-actions"
+			]
+		}
+	}
+}

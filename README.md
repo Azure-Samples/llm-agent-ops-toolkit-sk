@@ -1,57 +1,49 @@
-# Project Name
+# LLMAgentOps Toolkit
 
-(short, 1-3 sentenced, description of the project)
+`LLMAgentOps` Toolkit is repository that contains basic structure of LLM Agent based application built on top of the Semantic Kernel. The toolkit is designed to be a starting point for data scientists and developers for experimentation to evaluation and finally deploy to production their own LLM Agent based applications.
 
-## Features
+The sample is implemented the concept of `StateFlow` (a Finite State Machine FSM based LLM workflow) using [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/) agents - [StateFlow: Enhancing LLM Task-Solving through State-Driven Workflows](https://arxiv.org/abs/2403.11322)
 
-This project framework provides the following features:
+## Architecture
 
-* Feature 1
-* Feature 2
-* ...
+## Core Concepts
 
-## Getting Started
+## Experimentation
 
-### Prerequisites
+[Experimentation](experimentation/README.md) is the process of testing a hypothesis or a proposed LLM Agents based solution to a problem.
 
-(ideally very short, if any)
+## Evaluation
 
-- OS
-- Library version
-- ...
+[Evaluation](evaluation/README.md) is the process of evaluating the performance of the LLM Agents based solution.
 
-### Installation
+## Engineering Fundamentals
 
-(ideally very short)
+### Local Linting
 
-- npm install [package name]
-- mvn install
-- ...
+```bash
+conda activate base
+pylint src
+```
 
-### Quickstart
-(Add steps to get up and running quickly)
+### Local Unit Testing
 
-1. git clone [repository clone url]
-2. cd [repository name]
-3. ...
+```bash
+conda activate base
+python -m unittest discover -s tests
+```
 
+Get the test coverage report:
 
-## Demo
+```bash
+pip install coverage
+python -m coverage run --source src -m unittest discover -s tests
+python -m coverage report -m
+```
 
-A demo app is included to show how to use the project.
+### Local Functional Testing (Docker)
 
-To run the demo, follow these steps:
-
-(Add steps to start up the demo)
-
-1.
-2.
-3.
-
-## Resources
-
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
+```bash
+cp env_docker .env_docker # only once and update the values
+docker build --rm -t stateflow-semantic-kernel-api:latest .
+docker run -d --link mysql_server:mysql-local --name StateFlowApiSemanticKernel -p 8085:8000 --env-file .env_docker stateflow-semantic-kernel-api:latest
+```

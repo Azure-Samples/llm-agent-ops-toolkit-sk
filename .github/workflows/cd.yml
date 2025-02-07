@@ -1,0 +1,58 @@
+name: "Continuous Deployment"
+
+env:
+  AZURE_WEBAPP_NAME: 'mysql-copilot-api'
+  PYTHON_VERSION: '3.12'
+
+on:
+  workflow_dispatch:
+    inputs:
+      approve_deploy:
+        description: "Approve deployment"
+        required: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.approve_deploy == true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python version
+        uses: actions/setup-python@v3.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Azure login using service principal
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Azure docker login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+      - name: Docker build and push
+        run: |
+          docker build . -t ${{ secrets.REGISTRY_SERVER }}/${{ env.AZURE_WEBAPP_NAME }}:${{ github.sha }}
+          docker tag ${{ secrets.REGISTRY_SERVER }}/${{ env.AZURE_WEBAPP_NAME }}:${{ github.sha }} ${{ secrets.REGISTRY_SERVER }}/${{ env.AZURE_WEBAPP_NAME }}:latest
+          docker push ${{ secrets.REGISTRY_SERVER }}/${{ env.AZURE_WEBAPP_NAME }}:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_SERVER }}/${{ env.AZURE_WEBAPP_NAME }}:latest
+
+      - name: Azure WebApp deploy
+        uses: azure/webapps-deploy@v2
+        with:
+            app-name: ${{ env.AZURE_WEBAPP_NAME }}
+            images: ${{ secrets.REGISTRY_SERVER }}/${{ env.AZURE_WEBAPP_NAME }}:${{ github.sha }}

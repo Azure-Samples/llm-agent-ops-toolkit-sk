@@ -1,0 +1,71 @@
+name: "Continuous Evaluation"
+
+env:
+  PYTHON_VERSION: '3.12'
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_evaluation:
+        description: "Experiment Name"
+        required: false
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python version
+        uses: actions/setup-python@v3.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+    
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r experimentation/requirements_exp.txt
+          pip install -r evaluation/requirements_eval.txt
+     
+      - name: Create .env file for experimentation
+        run: |
+          cd experimentation
+          touch .env
+          echo "IS_DEVELOPMENT=true" >> .env
+          echo "GLOBAL_LLM_SERVICE=AzureOpenAI" >> .env
+          echo "AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=${{ secrets.AZURE_OPENAI_CHAT_DEPLOYMENT_NAME }}" >> .env
+          echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> .env
+          echo "AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }}" >> .env
+          echo "AZURE_OPENAI_API_VERSION=${{ secrets.AZURE_OPENAI_API_VERSION }}" >> .env
+          echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
+          echo "MYSQL_PORT=${{ secrets.MYSQL_PORT }}" >> .env
+          echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
+          echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+          echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+      
+      - name: Batch experiment
+        run: |
+          cd experimentation
+          if [ -z "${{ github.event.inputs.run_evaluation }}" ]; then
+            EXPERIMENT_NAME="CE Batch Experiment $(date +'%Y-%m-%d %H:%M:%S')"
+          else
+            EXPERIMENT_NAME="${{ github.event.inputs.run_evaluation }}"
+          fi
+          python app_experiment_batch.py ./data/batch_input/queries.jsonl ../evaluation/.evaluation_input_data_batch/ "${EXPERIMENT_NAME}"
+
+      - name: Create .env file for evaluation
+        run: |
+          cd evaluation
+          touch .env
+          echo "AIPROJECT_CONNECTION_STRING=${{ secrets.AIPROJECT_CONNECTION_STRING }}" >> .env
+          echo "EVALUATION_MODEL=${{ secrets.EVALUATION_MODEL }}" >> .env
+
+      - name: Batch evaluation
+        run: |
+          cd evaluation
+          for file in .evaluation_input_data_batch/*; do
+            python ./run_azure_ai_foundry_local_eval.py $(echo $file | cut -d'/' -f2 | cut -d'.' -f1) $file
+          done

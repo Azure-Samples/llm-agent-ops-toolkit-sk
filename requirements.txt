@@ -1,0 +1,8 @@
+python-dotenv==1.0.1
+semantic-kernel==1.18.2
+asyncio==3.4.3
+mysql-connector-python==9.2.0
+fastapi==0.115.6
+uvicorn==0.34.0
+azure-monitor-opentelemetry-exporter==1.0.0b33
+opentelemetry-instrumentation-fastapi==0.51b0
