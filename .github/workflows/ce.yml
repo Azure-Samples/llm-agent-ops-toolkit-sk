@@ -66,6 +66,11 @@ jobs:
           echo "AIPROJECT_CONNECTION_STRING=${{ secrets.AIPROJECT_CONNECTION_STRING }}" >> .env
           echo "EVALUATION_MODEL=${{ secrets.EVALUATION_MODEL }}" >> .env
 
+      - name: Azure login using service principal
+        uses: azure/login@a65d910e8af852a8061c627c456678983e180302 #v2.2.0
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Batch evaluation
         run: |
           cd evaluation
