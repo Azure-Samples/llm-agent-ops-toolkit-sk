@@ -14,7 +14,7 @@ function Initialize-MySQLData {
     Invoke-WebRequest -Uri $Url -OutFile $ZipFilePath
 
     # Extract the zip file
-    Expand-Archive -Path $ZipFilePath -DestinationPath $DestinationFolder
+    Expand-Archive -Force -Path $ZipFilePath -DestinationPath $DestinationFolder
 
     # Move the SQL file to the data folder
     Move-Item -Path (Join-Path -Path $DestinationFolder -ChildPath "mysqlsampledatabase.sql") -Destination $DestinationFolder
@@ -49,7 +49,7 @@ function Stop-MySQLServer {
 # Load the MySQL sample database
 function Import-MySQLData {
     param (
-        [string]$ContainerName = "mysql_server",
+        [string]$ContainerName = "mysql-local",
         [string]$Data = "./.local_data",
         [string]$RootPassword = "root_password"
     )

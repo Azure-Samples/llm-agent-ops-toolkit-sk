@@ -8,14 +8,11 @@ Follow these steps to setup MySQL locally for development or experimentation.
 
 ## Steps
 
-1. Start [MySQL server using Docker](https://hub.docker.com/_/mysql)
+1. Run the PowerShell commands to create a database and user, provide the password when prompted
 
-    ```bash
-    docker run --name mysql-local -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:tag
-    ```
-
-1. Run the PowerShell script to create a database and user, provide the password when prompted
-
-    ```bash
-    mysql_server.ps1
+    ```pwsh
+    cd ./experimentation/data/local_mysql/
+    ./mysql_server.ps1 init
+    ./mysql_server.ps1 start
+    ./mysql_server.ps1 import
     ```
