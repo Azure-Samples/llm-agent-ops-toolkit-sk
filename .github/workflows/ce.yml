@@ -75,5 +75,9 @@ jobs:
         run: |
           cd evaluation
           for file in .evaluation_input_data_batch/*; do
-            python ./run_azure_ai_foundry_local_eval.py $(echo $file | cut -d'/' -f2 | cut -d'.' -f1) $file
+            AGENT_NAME=$(echo $file | cut -d'/' -f2 | cut -d'.' -f1)
+            if [ "${AGENT_NAME}" == "executor" ]; then
+              continue
+            fi
+            python ./run_azure_ai_foundry_local_eval.py "${EXPERIMENT_NAME}_${AGENT_NAME}" $file
           done

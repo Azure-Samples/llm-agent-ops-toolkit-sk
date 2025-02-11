@@ -73,6 +73,7 @@ if __name__ == "__main__":
             }
         },
         output_path=Path(output_path) / data_file_name,
+        azure_ai_project=project.scope,
     )
 
     tabular_result = pd.DataFrame(result.get("rows"))
