@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  cd:
     runs-on: ubuntu-latest
     if: github.event.inputs.approve_deploy == true
     steps:
