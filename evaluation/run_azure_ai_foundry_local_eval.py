@@ -80,7 +80,7 @@ if __name__ == "__main__":
 
     pprint("-----Summarized Metrics-----")
     pprint(result["metrics"])
-    pprint("-----Tabular Result-----")
-    pprint(tabular_result)
+    # pprint("-----Tabular Result-----")
+    # pprint(tabular_result)
     # Do not print the URL for security reasons
     # pprint(f"View evaluation results in AI Studio: {result['studio_url']}")
