@@ -6,7 +6,7 @@ from uuid import uuid4
 from dotenv import load_dotenv
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
-from exp_src.model.batch_output import BatchOutput
+from exp_src.model.batch_output import BatchOutput, AgentInvokingTrajectory, AgentInvokingData
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../"))
 load_dotenv(override=True)
@@ -21,6 +21,7 @@ async def main(batch_jsonl_input_file: str, batch_output_path: str, experiment_n
     thread_id = str(uuid4())
     input_data = []
     output_data = []
+    agent_invoking_trajectory = []
     all_roles = set()
     with open(batch_jsonl_input_file, "r") as f:
         for line in f:
@@ -30,9 +31,10 @@ async def main(batch_jsonl_input_file: str, batch_output_path: str, experiment_n
         index = 0
         for data in input_data:
             parent_id = str(uuid4())
-            conversation_history = ""
+            agent_selections = []
             chat = get_chat_client(sql_executor_env)
             input_query = data["input"]
+            final_output = ""
             print(f"{index} - Query # {AuthorRole.USER}: '{input_query}'", end=" .... ")
 
             query_with_init_thought = sql_executor_env.attach_init_observation(
@@ -43,11 +45,10 @@ async def main(batch_jsonl_input_file: str, batch_output_path: str, experiment_n
                     role=AuthorRole.USER, content=query_with_init_thought
                 )
             )
+            conversation_history = f"{AuthorRole.USER.upper()} - user: {query_with_init_thought}\n"
 
             async for content in chat.invoke():
-                # print(f"# {content.role} - {content.name or '*'}: '{content.content}'")
                 output = f"{content.role.upper()} - {content.name or '*'}: {content.content}"
-                conversation_history += f"{output}\n"
                 output_data.append(
                     BatchOutput(
                         experiment=experiment_name,
@@ -61,6 +62,23 @@ async def main(batch_jsonl_input_file: str, batch_output_path: str, experiment_n
                     )
                 )
                 all_roles.add(content.name)
+                agent_selections.append(
+                    AgentInvokingData(
+                        name=content.name,
+                        conversation_history=conversation_history
+                    )
+                )
+                conversation_history += f"{output}\n"
+                final_output = str(content.content)
+            agent_invoking_trajectory.append(
+                AgentInvokingTrajectory(
+                    experiment=experiment_name,
+                    threadId=thread_id,
+                    input=input_query,
+                    final_output=final_output,
+                    agent_selections=agent_selections
+                )
+            )
             print("done.")
             index += 1
     finally:
@@ -71,6 +89,15 @@ async def main(batch_jsonl_input_file: str, batch_output_path: str, experiment_n
                     if output.role == role:
                         f.write(json.dumps(output.to_dict_without_role()) + "\n")
             print(f"Output data for {role} saved to {output_file}")
+        if len(agent_invoking_trajectory) > 0:
+            output_file = os.path.join(batch_output_path, "all_agents.jsonl")
+            with open(output_file, "w") as f:
+                for trajectory in agent_invoking_trajectory:
+                    f.write(json.dumps(trajectory.to_dict()) + "\n")
+                    # If we want to flatten the agent selections into multiple lines
+                    # for item in trajectory.to_flattened_dict():
+                    #     f.write(json.dumps(item) + "\n")
+            print(f"Agent invoking trajectory saved to {output_file}")
 
 
 if __name__ == "__main__":
