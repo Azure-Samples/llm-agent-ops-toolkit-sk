@@ -18,3 +18,21 @@ class Constants:
     init_thought = "Thought: I should first find out what tables are available in this MySQL database that can help me answer this question."
     sqlite_db_file_name = "sql_copilot.sqlite.db"
     default_response = "I'm sorry, I am not able to find any information on that."
+    sql_data_manipulation_commands = [
+        "UPDATE",
+        "DELETE",
+        "INSERT",
+        "CREATE",
+        "DROP",
+        "ALTER",
+        "TRUNCATE",
+        "RENAME",
+        "START",
+        "COMMIT",
+        "ROLLBACK",
+        "SAVEPOINT",
+        "DECLARE",
+        "BEGIN",
+        "GRANT",
+        "REVOKE",
+    ]
