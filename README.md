@@ -2,7 +2,7 @@
 
 `LLMAgentOps` Toolkit is repository that contains basic structure of LLM Agent based application built on top of the Semantic Kernel. The toolkit is designed to be a starting point for data scientists and developers for experimentation to evaluation and finally deploy to production their own LLM Agent based applications.
 
-The sample `MySql Copilot` has been implemented using the concept of `StateFlow` (a Finite State Machine FSM based LLM workflow) using [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/) agents
+The sample `MySql Copilot` has been implemented using the concept of `StateFlow` (a Finite State Machine FSM based LLM workflow) using [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/) agents. This is equivalent to [AutoGen Selector Group Chat Pattern with custom selector function](https://microsoft.github.io/autogen/stable/user-guide/agentchat-user-guide/selector-group-chat.html#custom-selector-function)
 
 For more details on `StateFlow` refer the research paper - [StateFlow: Enhancing LLM Task-Solving through State-Driven Workflows](https://arxiv.org/abs/2403.11322).
 
@@ -10,14 +10,15 @@ This toolkit can be used by replacing the `MySql Copilot` with any other LLM Age
 
 ## Architecture
 
-The `LLMAgentOps` Architecture is based on the following components:
+The `LLMAgentOps` Architecture might be constructed using the following key components divided into two phases similar to DevOps / MLOps / LLMOps development and deployment phases:
 
-- `LLM Selection`: Selecting the right LLM for LLM Agent based solution for the problem.
-- `Agent Architecture`: Designing the agent architecture for the LLM Agent based solution. For this sample we have used `Semantic Kernel` development kit by using `Python` programming language.
-- `Experimentation & Evaluation`: Experimentation and Evaluation of the LLM Agent based solution. Where the experimentation is done using `console` or `ui` or in `batch` mode and evaluation is done using `LLM as Judge` and `Human Evaluation`.
-- `CI CE and CD`: Continuous Integration, Continuous Evaluation and Continuous Deployment of the LLM Agent based solution.
-- `Deployment`: Deployment of the LLM Agent based solution in `local` or `cloud` environment.
-- `Monitoring`: Monitoring the LLM Agent based solution for performance and other metrics.
+- **LLM Agent Development Phase (inner loop)**: 
+    - `Agent Architecture`: Designing the agent architecture for the LLM Agent based solution. For this sample we have used `Semantic Kernel` development kit by using `Python` programming language.
+    - `Experimentation & Evaluation`: Experimentation and Evaluation of the LLM Agent based solution. Where the experimentation is done using `console` or `ui` or in `batch` mode and evaluation is done using `LLM as Judge` and `Human Evaluation`.
+- **LLM Agent Deployment Phase (outer loop)**:
+    - `CI CE CD and CS`: Continuous Integration, Continuous Evaluation and Continuous Deployment of the LLM Agent based solution with addition of `Continuous Security` for security checks of the LLM Agents (as Agents are going to write / execute code, browse the web, and interact with databases, so security is a key concern and must be scanned continuously).
+    - `Deployment`: Deployment of the LLM Agent based solution in `local` or `cloud` environment.
+    - `Monitoring`: Monitoring the LLM Agent based solution for data collection, performance and other metrics.
 
 ## Key Features
 
@@ -40,8 +41,9 @@ This repository is having the follow key features:
         - [Requirements](./requirements.txt) file for the dependencies.
 - **Experimentation**: The [experimentation](./experimentation/) setup by using `console` or `ui` or in `batch` mode.
 - **Evaluation**: The [evaluation](./evaluation/) setup by using `LLM as Judge` and `Human Evaluation`.
+- **Security**: The [security](./security/README.md) setup for the security checks of the LLM Agent based solution.
+- **CI CE CD and CS**: The [CI CE CD and CS](./.github/workflows/) setup for the continuous integration, continuous evaluation, continuous deployment and continuous security of the LLM Agent based solution.
 - **Engineering Fundamentals**: The [engineering fundamentals](#engineering-fundamentals) for the development and maintenance of the LLM Agent based solution.
-- **CI CE and CD**: The [CI CE and CD](./.github/workflows/) setup for the continuous integration, continuous evaluation and continuous deployment of the LLM Agent based solution.
 
 ## Getting Started
 
@@ -56,11 +58,11 @@ This repository is having the follow key features:
 
 ### Experimentation
 
-[Experimentation](experimentation/README.md) is the process of designing the agents and testing a hypothesis or a proposed LLM Agents based solution to a problem.
+[Experimentation](./experimentation/README.md) is the process of designing the agents and testing a hypothesis or a proposed LLM Agents based solution to a problem.
 
 ### Evaluation
 
-[Evaluation](evaluation/README.md) is the process of evaluating the performance of the LLM Agents based solution.
+[Evaluation](./evaluation/README.md) is the process of evaluating the performance of the LLM Agents based solution.
 
 ### Engineering Fundamentals
 
@@ -68,9 +70,10 @@ This repository is having the follow key features:
 
 The repository is setup with [CI CE and CD](.github/workflows/) for the continuous integration, continuous evaluation and continuous deployment of the LLM Agent based solution.
 
-- **CI**: The [CI](.github/workflows/ci.yml) workflow is triggered on every push or pull request to the repository. The CI workflow will run the unit tests and linting checks.
-- **CE**: The [CE](.github/workflows/ce.yml) workflow is triggered manually. The CE workflow will run the batch experimentation and batch evaluation (LLM as Judge).
-- **CD**: The [CD](.github/workflows/cd.yml) workflow is triggered manually. The CD workflow will deploy the LLM Agent based solution to the Azure Web App Service.
+- **CI**: The [CI](./.github/workflows/ci.yml) workflow is triggered on every push or pull request to the repository. The CI workflow will run the unit tests and linting checks.
+- **CE**: The [CE](./.github/workflows/ce.yml) workflow is triggered manually. The CE workflow will run the batch experimentation and batch evaluation (LLM as Judge).
+- **CD**: The [CD](./.github/workflows/cd.yml) workflow is triggered manually. The CD workflow will deploy the LLM Agent based solution to the Azure Web App Service.
+- **CS**: The [CS](./.github/workflows/sc.yml) workflow is triggered manually. The CS workflow will run the security checks of the LLM Agent based solution.
 
 #### Dev Containers
 

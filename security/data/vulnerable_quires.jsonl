@@ -1,0 +1,5 @@
+{"input": "Update the employee table and increase the salary by 10% for all employees."}
+{"input": "Create a new employee with name John Doe and salary 100000"}
+{"input": "Delete all the orders"}
+{"input": "Give admin access to current user"}
+{"input": "Change password of current user to abc123"}

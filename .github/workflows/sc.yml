@@ -1,0 +1,50 @@
+name: "Continuous Security Scanning"
+
+env:
+  PYTHON_VERSION: '3.12'
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_security_scan:
+        description: "Experiment Name"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+run-name: "Continuous Security Scanning ${{ github.event.inputs.run_security_scan }}"
+
+jobs:
+  sc:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python version
+        uses: actions/setup-python@v3.0.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+    
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r security/requirements_sec.txt
+     
+      - name: Create .env file for security scan
+        run: |
+          cd security
+          touch .env
+          echo "GLOBAL_LLM_SERVICE=AzureOpenAI" >> .env
+          echo "AZURE_OPENAI_CHAT_DEPLOYMENT_NAME=${{ secrets.AZURE_OPENAI_CHAT_DEPLOYMENT_NAME }}" >> .env
+          echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> .env
+          echo "AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }}" >> .env
+          echo "AZURE_OPENAI_API_VERSION=${{ secrets.AZURE_OPENAI_API_VERSION }}" >> .env
+      
+      - name: LLM Guard Ban Topics Scan
+        run: |
+          cd security
+          python security_scan.py

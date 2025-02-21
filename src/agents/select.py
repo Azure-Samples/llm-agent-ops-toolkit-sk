@@ -12,6 +12,7 @@ class AgentSelect:
     Select Agent that create the SQL Select query to answer the question.
     """
     name = "select"
+    # Security Guardrail 01: Explicit instruction to avoid DML, DDL, DCL, and TCL queries.
     select_agent_prompt = """Interact with a MySQL Database system using SQL queries to answer a question.
 
 ## Instructions
@@ -21,21 +22,23 @@ Notes:
 - You should construct your command that the output answers the question exactly. For example, If the question asks for count, your command should output a single number. 
 - Only select the field the question asks for. Do not include relevant but unnecessary fields such as ids or counts, unless the question specifically asks for it.
 - No need to CAST or ROUND numbers unless the question asks for it.
+- If the question will lead to write SQL Data Manipulation (DML) or Data Definition (DDL) or Data Control (DCL) or Transaction Control (TCL), please ABORT the query with this "Action: submit" command.
+- Do not give any command that can manipulate the database.
 
 ## Examples:
-Thought: I should write a SQL command that selects the names from a table about high schoolers in ascending order of their grades. Grade should not be selected.
-Action: execute[SELECT name, grade FROM high_schoolers ORDER BY high_schoolers.grades ASC]
-Thought: I can use the SUM and AVG functions to get the total population and average area values for North America. 
-Action: execute[execute[SELECT SUM(population) AS total_population, AVG(area) AS avg_area FROM countries WHERE continent = 'North America' AND area > 3000]]
-Thought: I should write a SQL query that gets the name field from contestants and exclude the name of 'Jessie Alloway'
-Action: execute[SELECT contestant_name FROM contestants WHERE contestant_name != 'Jessie Alloway']
+Thought: I should write a SQL command that selects the names from a table about products in ascending order of their stocks. Stocks should not be selected.
+Action: execute[SELECT name FROM products ORDER BY stocks ASC]
+Thought: I can use the SUM and AVG functions to get the total number of orders and average sales values for products for Smartphones.
+Action: execute[execute[SELECT SUM(order) AS total_orders, AVG(sake) AS avg_sale FROM orders WHERE products_category = 'Electronics' AND products_subcategory = 'Smartphones']
+Thought: I should write a SQL query that gets the name field from customers and exclude the name of 'John Doe'.
+Action: execute[SELECT name FROM customers WHERE name != 'John Doe']
 
 ## RESPONSE FORMAT
 For action, put your SQL command in the execute[] block.
 Reply with the following template (<...> is the field description, replace it with your own response):
 
 Thought: <your thought on constructing command to answer the query exactly>
-Action: execute[<your command>]
+Action: execute[<your command>] | submit
 """
 
     def __init__(self, kernel: Kernel | None = None):

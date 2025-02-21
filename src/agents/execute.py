@@ -99,14 +99,24 @@ class SQLExecuteAgent(ChatCompletionAgent):
         )
 
         a = message.strip().split(f"{Constants.action_identifier} ")
-        _, action = a[0], a[1]
-        action_parsed, is_code = self.sql_parser_react(action)
+        try:
+            _, action = a[0], a[1]
+            action_parsed, is_code = self.sql_parser_react(action)
+        except IndexError:
+            action_parsed, is_code = None, False
         if not is_code:
             observation = f"{Constants.sql_error_message}: Your last `execute` action did not contain SQL code"
             if Constants.sql_show_database in action_parsed:
                 observation = f"{Constants.sql_error_message}: SHOW DATABASES is not allowed in this environment."
         else:
-            observation, _, _, _ = self.env.step(action_parsed)
+            # Security Guardrail 02: Check for SQL Data Manipulation related keywords
+            if any(
+                keyword.lower() + " " in action_parsed.lower()
+                for keyword in Constants.sql_data_manipulation_commands
+            ):
+                observation = f"{Constants.sql_error_message}: SQL Data Manipulation Language (DML) is not allowed in this environment."
+            else:
+                observation, _, _, _ = self.env.step(action_parsed)
 
         # Limit observation size due to context window thresholds for API call
         if isinstance(observation, str) and len(observation) > 350:
