@@ -4,6 +4,6 @@ mysql-connector-python==9.2.0
 SQLAlchemy==2.0.37
 aiohttp==3.11.11
 aiosqlite==0.20.0
-chainlit==2.0.603
+chainlit==2.8.5
 python-dotenv==1.0.1
 pandas==2.2.3
