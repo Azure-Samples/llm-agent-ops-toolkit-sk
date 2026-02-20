@@ -1,4 +1,4 @@
-semantic-kernel==1.18.2
+semantic-kernel==1.39.4
 asyncio==3.4.3
 mysql-connector-python==9.2.0
 SQLAlchemy==2.0.37
