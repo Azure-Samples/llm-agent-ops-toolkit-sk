@@ -21,10 +21,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2.8.0
 
       - name: Set up Python version
-        uses: actions/setup-python@v3.0.0
+        uses: actions/setup-python@0ebf233433c08fb9061af664d501c3f3ff0e9e20 # v3.0.0
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
@@ -69,7 +69,7 @@ jobs:
           echo "EVALUATION_MODEL=${{ secrets.EVALUATION_MODEL }}" >> .env
 
       - name: Azure login using service principal
-        uses: azure/login@a65d910e8af852a8061c627c456678983e180302 #v2.2.0
+        uses: azure/login@a65d910e8af852a8061c627c456678983e180302 # v2.2.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
